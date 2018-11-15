@@ -53,13 +53,13 @@ class Routes extends Component {
       <Switch>
         <Route
           exact
-          path="/new"
-          render={props => <NewPost {...props} createPost={this.createPost} />}
+          path="/"
+          render={props => <Home {...props} posts={this.state.posts} />}
         />
         <Route
           exact
-          path="/"
-          render={props => <Home {...props} posts={this.state.posts} />}
+          path="/new"
+          render={props => <NewPost {...props} createPost={this.createPost} />}
         />
         <Route
           exact
@@ -67,7 +67,9 @@ class Routes extends Component {
           render={props => (
             <BlogPage
               {...props}
-              posts={this.state.posts}
+              post={this.state.posts.find(
+                post => post.postId === props.match.params.postId
+              )}
               deletePost={this.deletePost}
               editPost={this.editPost}
             />

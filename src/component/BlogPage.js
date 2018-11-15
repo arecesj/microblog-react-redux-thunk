@@ -4,23 +4,37 @@ import PostForm from './PostForm';
 class BlogPage extends Component {
   constructor(props) {
     super(props);
+
     this.state = {
-      isEditing: false
+      ...this.props.post,
+      isEdit: false
     };
 
-    this.switchToEdit = this.switchToEdit.bind(this);
+    this.handleChange = this.handleChange.bind(this);
+    this.handleSubmit = this.handleSubmit.bind(this);
+    this.toggleEdit = this.toggleEdit.bind(this);
+    this.handleCancel = this.handleCancel.bind(this);
     this.handleDelete = this.handleDelete.bind(this);
   }
 
-  switchToEdit() {
-    this.setState({ isEditing: true });
+  handleChange(evt) {
+    this.setState({ [evt.target.name]: evt.target.value });
   }
 
-  handleEdit(evt) {
+  toggleEdit(evt) {
+    evt.preventDefault();
+    this.setState({ isEdit: true });
+  }
+
+  handleSubmit(evt) {
     evt.preventDefault();
     this.props.editPost(this.props.match.params.postId);
     // this.props.history.push(`/${this.props.match.params.postId}`);
-    this.setState({ isEditing: false });
+  }
+
+  handleCancel(evt) {
+    evt.preventDefault();
+    this.setState({ isEdit: false });
   }
 
   handleDelete(evt) {
@@ -30,24 +44,24 @@ class BlogPage extends Component {
   }
 
   render() {
-    let story = this.props.posts.filter(
-      post => post.postId === this.props.match.params.postId
-    )[0];
-
-    return story === undefined ? (
-      <div />
-    ) : (
+    return (
       <div className="BlogPage">
-        {!this.state.isEditing ? (
+        {!this.state.isEdit ? (
           <div>
-            <h1>{story.title}</h1>
-            <h3>{story.description}</h3>
-            <h4>{story.body}</h4>
-            <button onClick={this.switchToEdit}>Edit</button>
+            <h1>{this.state.title}</h1>
+            <h3>{this.state.description}</h3>
+            <h4>{this.state.body}</h4>
+            <button onClick={this.toggleEdit}>Edit</button>
             <button onClick={this.handleDelete}>Delete</button>
           </div>
         ) : (
-          <PostForm story={story} />
+          <PostForm
+            {...this.props}
+            postDetails={this.state}
+            handleChange={this.handleChange}
+            handleSubmit={this.handleSubmit}
+            handleCancel={this.handleCancel}
+          />
         )}
       </div>
     );

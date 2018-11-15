@@ -12,8 +12,9 @@ class Jumbotron extends Component {
       <div className="jumbotron">
         <h1 className="display-4">Microblog</h1>
         <p className="lead">Get in the Rithm of blogging!</p>
-        <Link to="/">Blog</Link>
-        <Link to="/new">Add a new post</Link>
+        <Link to="/">Blog </Link>
+        <hr />
+        <Link to="/new"> Add a new post</Link>
       </div>
     );
   }

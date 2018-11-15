@@ -3,7 +3,6 @@ import { Link } from 'react-router-dom';
 
 class BlogCard extends Component {
   render() {
-    console.log(this.props.post);
     return (
       <div className="BlogCard">
         <div className="col-lg">
