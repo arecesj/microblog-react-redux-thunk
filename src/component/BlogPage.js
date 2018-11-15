@@ -28,8 +28,8 @@ class BlogPage extends Component {
 
   handleSubmit(evt) {
     evt.preventDefault();
-    this.props.editPost(this.props.match.params.postId);
-    // this.props.history.push(`/${this.props.match.params.postId}`);
+    this.props.editPost(this.state);
+    this.setState({ isEdit: false });
   }
 
   handleCancel(evt) {
@@ -53,6 +53,8 @@ class BlogPage extends Component {
             <h4>{this.state.body}</h4>
             <button onClick={this.toggleEdit}>Edit</button>
             <button onClick={this.handleDelete}>Delete</button>
+            <hr />
+            <h3>Commentos: </h3>
           </div>
         ) : (
           <PostForm

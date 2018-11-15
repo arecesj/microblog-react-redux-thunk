@@ -41,14 +41,18 @@ class Routes extends Component {
   }
 
   // figure out what gets put in state to get updated
-  editPost(id) {
-    let editPosts = this.state.posts.filter(post => post.postId !== id);
+  editPost(data) {
+    let updatedPosts = this.state.posts.map(post =>
+      post.postId === data.postId ? data : post
+    );
     this.setState({
-      posts: [...editPosts]
+      posts: [...updatedPosts]
     });
   }
 
   render() {
+    // console.log('props.mathc.params.postId: ', this.props.match.params.postId);
+    console.log('posts: :', this.state.posts);
     return (
       <Switch>
         <Route
@@ -64,11 +68,11 @@ class Routes extends Component {
         <Route
           exact
           path="/:postId"
-          render={props => (
+          render={routerProps => (
             <BlogPage
-              {...props}
+              {...routerProps}
               post={this.state.posts.find(
-                post => post.postId === props.match.params.postId
+                post => post.postId === routerProps.match.params.postId
               )}
               deletePost={this.deletePost}
               editPost={this.editPost}
