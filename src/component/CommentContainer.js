@@ -7,49 +7,76 @@ class CommentContainer extends Component {
   constructor(props) {
     super(props);
     this.state = {
-      comments: [],
-      completed: new Set([])
+      comment: ''
     };
-    this.createComment = this.createComment.bind(this);
-    this.removeComment = this.removeComment.bind(this);
-    this.toggleCompleted = this.toggleCompleted.bind(this);
+    // this.createComment = this.createComment.bind(this);
+    // this.removeComment = this.removeComment.bind(this);
+    // this.toggleCompleted = this.toggleCompleted.bind(this);
+
+    this.handleCommentChange = this.handleCommentChange.bind(this);
+    this.handleSubmitComment = this.handleSubmitComment.bind(this);
   }
 
-  createComment(data) {
-    let newComment = { ...data, id: uuid() };
-    this.setState(st => ({
-      comments: [...st.comments, newComment]
-    }));
+  // createComment(data) {
+  //   let newComment = { ...data, id: uuid() };
+  //   this.setState(st => ({
+  //     comments: [...st.comments, newComment]
+  //   }));
+  // }
+
+  handleCommentChange(evt) {
+    this.setState({ [evt.target.name]: evt.target.value });
   }
 
-  removeComment(id) {
-    this.setState(st => ({
-      comments: st.comments.filter(comment => comment.id !== id)
-    }));
+  handleSubmitComment(evt) {
+    evt.preventDefault();
+    let newComment = {
+      commentId: uuid(),
+      commentText: this.state.comment
+    };
+    this.props.createComment(newComment, this.props.postId);
+    this.setState({
+      comment: ''
+    });
   }
+
+  // removeComment(id) {
+  //   this.setState(st => ({
+  //     comments: st.comments.filter(comment => comment.id !== id)
+  //   }));
+  // }
 
   render() {
-    return (
-      <div>
-        <NewCommentForm createComment={this.createComment} />
+    let comments;
+
+    console.log('comments are', this.props.comments);
+
+    if (this.props.comments === undefined) {
+      comments = <p>No Comments here, yet!</p>;
+    } else {
+      comments = (
         <ul>
-          {this.state.comments.map(comment => {
-            console.log('map', this.state.completed);
+          {this.props.comments.map(each => {
             return (
-              <li key={comment.id}>
+              <li key={each.commentId}>
                 <Comment
-                  className={
-                    this.state.completed.hcomment.id) ? 'completed' : ''
-                  }
-                  id={comment.id}
-                  comment={comment.task}
-                  removeComment={this.removeComment}
-                  toggleCompleted={this.toggleCompleted}
+                  comment={each}
+                  deleteComment={this.props.deleteComment}
                 />
               </li>
             );
           })}
         </ul>
+      );
+    }
+    return (
+      <div>
+        {comments}
+        <CommentForm
+          handleSubmitComment={this.handleSubmitComment}
+          handleCommentChange={this.handleCommentChange}
+          commentDetails={this.state}
+        />
       </div>
     );
   }

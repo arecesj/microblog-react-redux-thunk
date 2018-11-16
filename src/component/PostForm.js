@@ -1,25 +1,46 @@
 import React, { Component } from 'react';
 
 class PostForm extends Component {
-  // constructor(props) {
-  //   super(props);
+  static defaultProps = {
+    postDetails: { title: '', description: '', body: '' }
+  };
 
-  // }
+  constructor(props) {
+    super(props);
+    console.log('post form', props);
+    this.state = {
+      title: this.props.postDetails.title,
+      description: this.props.postDetails.description,
+      body: this.props.postDetails.body
+    };
+
+    this.handleChange = this.handleChange.bind(this);
+    this.handleSubmit = this.handleSubmit.bind(this);
+  }
+
+  handleChange(evt) {
+    this.setState({ [evt.target.name]: evt.target.value });
+  }
+
+  handleSubmit(evt) {
+    evt.preventDefault();
+    this.props.handleSubmit(this.state);
+  }
 
   // add onclick to Save/Cancel buttons
   render() {
     return (
       <div className="PostForm">
-        <form onSubmit={this.props.handleSubmit}>
+        <form onSubmit={this.handleSubmit}>
           <div className="form-group">
             <label htmlFor="PostForm-title">Title: </label>
             <input
               type="text"
               id="PostForm-title"
               name="title"
-              value={this.props.postDetails.title}
+              value={this.state.title}
               placeholder={this.props.postDetails.title}
-              onChange={this.props.handleChange}
+              onChange={this.handleChange}
             />
           </div>
           <div className="form-group">
@@ -28,9 +49,9 @@ class PostForm extends Component {
               type="text"
               id="PostForm-description"
               name="description"
-              value={this.props.postDetails.description}
+              value={this.state.description}
               placeholder={this.props.postDetails.description}
-              onChange={this.props.handleChange}
+              onChange={this.handleChange}
             />
           </div>
           <div className="form-group">
@@ -40,9 +61,9 @@ class PostForm extends Component {
               id="PostForm-body"
               name="body"
               rows="3"
-              value={this.props.postDetails.body}
+              value={this.state.body}
               placeholder={this.props.postDetails.body}
-              onChange={this.props.handleChange}
+              onChange={this.handleChange}
             />
           </div>
           <button>Save</button>

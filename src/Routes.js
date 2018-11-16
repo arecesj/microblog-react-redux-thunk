@@ -18,12 +18,22 @@ class Routes extends Component {
   constructor(props) {
     super(props);
     this.state = {
-      posts: []
+      posts: [
+        {
+          postId: 1,
+          title: 'test1',
+          description: 'testing this',
+          body: 'hola',
+          comments: []
+        }
+      ]
     };
 
     this.createPost = this.createPost.bind(this);
     this.deletePost = this.deletePost.bind(this);
     this.editPost = this.editPost.bind(this);
+    this.createComment = this.createComment.bind(this);
+    this.deleteComment = this.deleteComment.bind(this);
   }
 
   createPost(data) {
@@ -40,19 +50,49 @@ class Routes extends Component {
     });
   }
 
-  // figure out what gets put in state to get updated
   editPost(data) {
+    console.log('edit post', data);
     let updatedPosts = this.state.posts.map(post =>
-      post.postId === data.postId ? data : post
+      +post.postId === +data.postId ? data : post
     );
     this.setState({
       posts: [...updatedPosts]
     });
   }
 
+  createComment(data, postId) {
+    console.log('createcomment: this is my data: ', data, postId);
+    let updatedPosts = this.state.posts.map(post =>
+      +post.postId === +postId
+        ? { ...post, comments: [...post.comments, data] }
+        : post
+    );
+    console.log('createcomment: updated this post: ', updatedPosts);
+    this.setState({ posts: updatedPosts }, () => {
+      console.log('new created comment: ', this.state);
+    });
+    debugger;
+  }
+
+  deleteComment(commentId, postId) {
+    let updatedPosts = this.state.posts.map(post =>
+      +post.postId === +postId
+        ? post.comments.map((comment, idx) =>
+            comment.commentId === commentId ? comment.splice(idx, 1) : comment
+          )
+        : post
+    );
+    this.setState({ posts: [...updatedPosts] });
+  }
+
+  findPostById(id) {
+    console.log('find', this.state.posts, id);
+    let post = this.state.posts.find(post => +post.postId === +id);
+    console.log('found post', post);
+    return post;
+  }
+
   render() {
-    // console.log('props.mathc.params.postId: ', this.props.match.params.postId);
-    console.log('posts: :', this.state.posts);
     return (
       <Switch>
         <Route
@@ -71,11 +111,11 @@ class Routes extends Component {
           render={routerProps => (
             <BlogPage
               {...routerProps}
-              post={this.state.posts.find(
-                post => post.postId === routerProps.match.params.postId
-              )}
+              post={this.findPostById(routerProps.match.params.postId)}
               deletePost={this.deletePost}
               editPost={this.editPost}
+              createComment={this.createComment}
+              deleteComment={this.deleteComment}
             />
           )}
         />

@@ -4,24 +4,14 @@ import PostForm from './PostForm';
 class NewPost extends Component {
   constructor(props) {
     super(props);
-    this.state = {
-      title: '',
-      description: '',
-      body: '',
-      comments: []
-    };
-    this.handleChange = this.handleChange.bind(this);
+
     this.handleSubmit = this.handleSubmit.bind(this);
     this.handleCancel = this.handleCancel.bind(this);
   }
 
-  handleChange(evt) {
-    this.setState({ [evt.target.name]: evt.target.value });
-  }
-
-  handleSubmit(evt) {
-    evt.preventDefault();
-    this.props.createPost(this.state);
+  handleSubmit(post) {
+    console.log('new post:', post);
+    this.props.createPost(post);
     this.props.history.push('/');
   }
 
@@ -35,8 +25,6 @@ class NewPost extends Component {
       <div className="NewPost">
         <PostForm
           {...this.props}
-          postDetails={this.state}
-          handleChange={this.handleChange}
           handleSubmit={this.handleSubmit}
           handleCancel={this.handleCancel}
         />
