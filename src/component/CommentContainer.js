@@ -1,28 +1,23 @@
 import React, { Component } from 'react';
 import CommentForm from './CommentForm';
-import uuid from 'uuid/v4';
+// import uuid from 'uuid/v4';
+// import { slugify } from 'slugify';
+
 import Comment from './Comment';
+var slugify = require('slugify');
 
 class CommentContainer extends Component {
   constructor(props) {
     super(props);
     this.state = {
-      comment: ''
+      comment: '',
+      commentId: ''
     };
-    // this.createComment = this.createComment.bind(this);
-    // this.removeComment = this.removeComment.bind(this);
-    // this.toggleCompleted = this.toggleCompleted.bind(this);
 
     this.handleCommentChange = this.handleCommentChange.bind(this);
     this.handleSubmitComment = this.handleSubmitComment.bind(this);
+    // this.handleDeleteComment = this.handleDeleteComment.bind(this);
   }
-
-  // createComment(data) {
-  //   let newComment = { ...data, id: uuid() };
-  //   this.setState(st => ({
-  //     comments: [...st.comments, newComment]
-  //   }));
-  // }
 
   handleCommentChange(evt) {
     this.setState({ [evt.target.name]: evt.target.value });
@@ -31,7 +26,8 @@ class CommentContainer extends Component {
   handleSubmitComment(evt) {
     evt.preventDefault();
     let newComment = {
-      commentId: uuid(),
+      // commentId: uuid(),
+      commentId: slugify(this.state.comment),
       commentText: this.state.comment
     };
     this.props.createComment(newComment, this.props.postId);
@@ -40,13 +36,8 @@ class CommentContainer extends Component {
     });
   }
 
-  // removeComment(id) {
-  //   this.setState(st => ({
-  //     comments: st.comments.filter(comment => comment.id !== id)
-  //   }));
-  // }
-
   render() {
+    console.log('here are my props: ', this.props);
     let comments;
 
     console.log('comments are', this.props.comments);
@@ -60,6 +51,7 @@ class CommentContainer extends Component {
             return (
               <li key={each.commentId}>
                 <Comment
+                  postId={this.props.postId}
                   comment={each}
                   deleteComment={this.props.deleteComment}
                 />

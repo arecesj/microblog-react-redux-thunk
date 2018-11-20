@@ -18,7 +18,7 @@ function rootReducer(state = DEFAULT_STATE, action) {
     case DELETE_POST:
       return { ...state, posts: [action.post, ...state.posts] };
 
-    // BOFA HERE OR ELSE
+    // TODO: FIX FUNCTION HERE OR ELSE
     case EDIT:
       return { ...state, posts: [...state.posts, action.post] };
     case CREATE_COMMENT:

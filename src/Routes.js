@@ -3,16 +3,15 @@ import { Switch, Route, Redirect } from 'react-router-dom';
 import Home from './container/Home';
 import NewPost from './component/NewPost';
 import BlogPage from './component/BlogPage';
-// import BlogCard from './component/BlogCard';
-import uuid from 'uuid/v4';
-// import {
-//   createPost,
-//   deletePost,
-//   edit,
-//   createComment,
-//   deleteComment
-// } from './actionCreators';
-// import { connect } from 'react-redux';
+
+import {
+  createPost,
+  deletePost,
+  edit,
+  createComment,
+  deleteComment
+} from './actionCreators';
+import { connect } from 'react-redux';
 
 class Routes extends Component {
   constructor(props) {
@@ -20,7 +19,7 @@ class Routes extends Component {
     this.state = {
       posts: [
         {
-          postId: 1,
+          postId: '1a',
           title: 'test1',
           description: 'testing this',
           body: 'hola',
@@ -36,8 +35,10 @@ class Routes extends Component {
     this.deleteComment = this.deleteComment.bind(this);
   }
 
-  createPost(data) {
-    let newPost = { ...data, postId: uuid() };
+  createPost(data, postId) {
+    // console.log(data);
+    // console.log(postId);
+    let newPost = { ...data, postId: postId };
     this.setState(() => ({
       posts: [...this.state.posts, newPost]
     }));
@@ -53,7 +54,7 @@ class Routes extends Component {
   editPost(data) {
     console.log('edit post', data);
     let updatedPosts = this.state.posts.map(post =>
-      +post.postId === +data.postId ? data : post
+      post.postId === data.postId ? data : post
     );
     this.setState({
       posts: [...updatedPosts]
@@ -63,7 +64,7 @@ class Routes extends Component {
   createComment(data, postId) {
     console.log('createcomment: this is my data: ', data, postId);
     let updatedPosts = this.state.posts.map(post =>
-      +post.postId === +postId
+      post.postId === postId
         ? { ...post, comments: [...post.comments, data] }
         : post
     );
@@ -71,23 +72,24 @@ class Routes extends Component {
     this.setState({ posts: updatedPosts }, () => {
       console.log('new created comment: ', this.state);
     });
-    debugger;
   }
 
   deleteComment(commentId, postId) {
-    let updatedPosts = this.state.posts.map(post =>
-      +post.postId === +postId
-        ? post.comments.map((comment, idx) =>
-            comment.commentId === commentId ? comment.splice(idx, 1) : comment
-          )
-        : post
+    console.log(this.state);
+    let targetPost = this.state.posts.find(post => post.postId === postId);
+    console.log('posts: ', targetPost);
+    let updatedComments = targetPost.comments.filter(
+      comment => comment.commentId !== commentId
     );
-    this.setState({ posts: [...updatedPosts] });
+    console.log('updatedComments: ', updatedComments);
+    targetPost.comments = [...updatedComments];
+    this.setState({ posts: [...this.state.posts] });
+    console.log('updated state: ', this.state);
   }
 
   findPostById(id) {
     console.log('find', this.state.posts, id);
-    let post = this.state.posts.find(post => +post.postId === +id);
+    let post = this.state.posts.find(post => post.postId === id);
     console.log('found post', post);
     return post;
   }

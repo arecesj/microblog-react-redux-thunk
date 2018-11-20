@@ -1,5 +1,8 @@
 import React, { Component } from 'react';
 import PostForm from './PostForm';
+// import { slugify } from 'slugify';
+
+var slugify = require('slugify');
 
 class NewPost extends Component {
   constructor(props) {
@@ -10,8 +13,9 @@ class NewPost extends Component {
   }
 
   handleSubmit(post) {
+    let postId = slugify(post.title);
     console.log('new post:', post);
-    this.props.createPost(post);
+    this.props.createPost(post, postId);
     this.props.history.push('/');
   }
 

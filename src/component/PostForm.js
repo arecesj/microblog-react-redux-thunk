@@ -2,7 +2,7 @@ import React, { Component } from 'react';
 
 class PostForm extends Component {
   static defaultProps = {
-    postDetails: { title: '', description: '', body: '' }
+    postDetails: { title: '', description: '', body: '', comments: [] }
   };
 
   constructor(props) {
@@ -11,7 +11,8 @@ class PostForm extends Component {
     this.state = {
       title: this.props.postDetails.title,
       description: this.props.postDetails.description,
-      body: this.props.postDetails.body
+      body: this.props.postDetails.body,
+      comments: this.props.postDetails.comments
     };
 
     this.handleChange = this.handleChange.bind(this);
@@ -27,7 +28,6 @@ class PostForm extends Component {
     this.props.handleSubmit(this.state);
   }
 
-  // add onclick to Save/Cancel buttons
   render() {
     return (
       <div className="PostForm">
